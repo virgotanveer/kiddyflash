@@ -177,19 +177,10 @@ body{
   padding:24px;box-shadow:var(--shadow);overflow:hidden;
 }
 .card-front{
-  background:var(--card);border:2px solid var(--card-border);
+  background:linear-gradient(145deg,var(--card),var(--bg));
+  border:2px solid var(--card-border);
 }
-.card-front .card-img-wrap{
-  position:absolute;inset:0;overflow:hidden;border-radius:var(--radius);
-  display:flex;align-items:center;justify-content:center;background:var(--bg2);
-}
-.card-front .card-img{
-  width:100%;height:100%;object-fit:cover;transition:opacity 0.3s;
-}
-.card-front .card-img-placeholder{
-  position:absolute;font-size:5rem;opacity:0.6;transition:opacity 0.3s;
-}
-.card-front .card-img-placeholder.hidden{opacity:0}
+.card-front .card-emoji-big{font-size:8rem;line-height:1;margin-bottom:8px;filter:drop-shadow(0 4px 12px rgba(0,0,0,0.1))}
 .card-front .hint-text{
   position:absolute;bottom:16px;font-size:0.8rem;color:var(--text3);
   background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);padding:6px 16px;
@@ -199,11 +190,7 @@ body{
   background:linear-gradient(145deg,var(--teal),var(--blue));
   border:2px solid rgba(255,255,255,0.2);transform:rotateY(180deg);color:#fff;
 }
-.card-back .card-img-small{
-  width:80px;height:80px;border-radius:16px;object-fit:cover;margin-bottom:10px;
-  border:3px solid rgba(255,255,255,0.4);box-shadow:0 4px 15px rgba(0,0,0,0.2);
-}
-.card-back .back-emoji{font-size:3.5rem;margin-bottom:8px}
+.card-back .back-emoji{font-size:5rem;line-height:1;margin-bottom:10px;filter:drop-shadow(0 2px 8px rgba(0,0,0,0.2))}
 .card-back .label{font-size:1.8rem;font-weight:800;margin-bottom:6px;text-shadow:0 2px 10px rgba(0,0,0,0.2)}
 .card-back .fact{
   font-size:0.85rem;text-align:center;opacity:0.9;line-height:1.4;padding:0 12px;
@@ -290,9 +277,9 @@ body{
   .welcome-title{font-size:1.8rem}
   .cat-grid{grid-template-columns:1fr}
   .card-container{max-width:270px}
-  .card-front .card-img-placeholder{font-size:3.5rem}
+  .card-front .card-emoji-big{font-size:5.5rem}
+  .card-back .back-emoji{font-size:3.5rem}
   .card-back .label{font-size:1.4rem}
-  .card-back .back-emoji{font-size:2.5rem}
 }
 </style>
 </head>
@@ -341,17 +328,13 @@ body{
     <div class="card-container" id="cardContainer" onclick="flipCard()">
       <div class="card-inner" id="cardInner">
         <div class="card-face card-front" id="cardFront">
-          <div class="card-img-wrap">
-            <div class="card-img-placeholder" id="cardFrontPlaceholder">&#x1F436;</div>
-            <img class="card-img" id="cardFrontImg" src="" alt="" style="display:none" onload="this.style.display='';document.getElementById('cardFrontPlaceholder').classList.add('hidden')" onerror="this.style.display='none';document.getElementById('cardFrontPlaceholder').classList.remove('hidden')">
-          </div>
+          <div class="card-emoji-big" id="cardFrontEmoji">&#x1F436;</div>
           <div class="hint-text">Tap to flip!</div>
         </div>
         <div class="card-face card-back" id="cardBack">
           <div class="flash-overlay" id="flashOverlay"></div>
           <div class="sparkle-container" id="sparkleContainer"></div>
           <div class="back-emoji" id="cardBackEmoji">&#x1F436;</div>
-          <img class="card-img-small" id="cardBackImg" src="" alt="" style="display:none" onerror="this.style.display='none'">
           <div class="label" id="cardLabel">Dog</div>
           <div class="fact" id="cardFact">Dogs are loyal and friendly pets!</div>
           <button class="sound-btn" id="soundBtn" onclick="event.stopPropagation();speakLabel()">&#x1F50A;</button>
@@ -409,31 +392,29 @@ body{
 // ==================== DATA ====================
 const AVATARS = ['\u{1F600}','\u{1F60A}','\u{1F60E}','\u{1F60D}','\u{1F929}','\u{1F973}','\u{1F60B}','\u{1F61C}','\u{1F92A}','\u{1F638}','\u{1F431}','\u{1F436}','\u{1F430}','\u{1F981}','\u{1F984}','\u{1F99D}'];
 
-const IMG = 'https://loremflickr.com/320/320';
-
 const CATEGORIES = [
   {id:'animals',name:'Animals',icon:'\u{1F43E}',color:'#FF6B6B',
    cards:[
-    {img:IMG+'/dog',label:'Dog',fact:'Dogs are loyal companions who love to play fetch!'},
-    {img:IMG+'/cat',label:'Cat',fact:'Cats purr when they are happy and content!'},
-    {img:IMG+'/cow',label:'Cow',fact:'Cows give us milk and say moo!'},
-    {img:IMG+'/horse',label:'Horse',fact:'Horses can run very fast and neigh loudly!'},
-    {img:IMG+'/goat',label:'Goat',fact:'Goats have rectangular pupils and love to climb!'},
-    {img:IMG+'/deer',label:'Deer',fact:'Male deer grow antlers every year!'},
-    {img:IMG+'/panda',label:'Panda',fact:'Pandas eat bamboo all day long!'},
-    {img:IMG+'/lion',label:'Lion',fact:'Lions are called the king of the jungle!'},
-    {img:IMG+'/tiger',label:'Tiger',fact:'Tigers have stripes, unique like fingerprints!'},
-    {img:IMG+'/monkey',label:'Monkey',fact:'Monkeys love bananas and swing from trees!'},
-    {img:IMG+'/bear',label:'Bear',fact:'Bears sleep all winter - that is hibernation!'},
-    {img:IMG+'/fox',label:'Fox',fact:'Foxes are clever and have bushy tails!'},
-    {img:IMG+'/rabbit',label:'Rabbit',fact:'Rabbits hop and love to eat carrots!'},
-    {img:IMG+'/sheep',label:'Sheep',fact:'Sheep say baa and give us wool!'},
-    {img:IMG+'/bird',label:'Bird',fact:'Birds have feathers and most can fly!'},
-    {img:IMG+'/chicken',label:'Chicken',fact:'Baby chickens are called chicks!'},
-    {img:IMG+'/owl',label:'Owl',fact:'Owls sleep during day and hunt at night!'},
-    {img:IMG+'/penguin',label:'Penguin',fact:'Penguins are birds that cannot fly but swim!'},
-    {img:IMG+'/eagle',label:'Eagle',fact:'Eagles have excellent eyesight and fly very high!'},
-    {img:IMG+'/snake',label:'Snake',fact:'Snakes taste the air with their tongues!'}
+    {emoji:'\u{1F436}',label:'Dog',fact:'Dogs are loyal companions who love to play fetch!'},
+    {emoji:'\u{1F431}',label:'Cat',fact:'Cats purr when they are happy and content!'},
+    {emoji:'\u{1F42E}',label:'Cow',fact:'Cows give us milk and say moo!'},
+    {emoji:'\u{1F434}',label:'Horse',fact:'Horses can run very fast and neigh loudly!'},
+    {emoji:'\u{1F410}',label:'Goat',fact:'Goats have rectangular pupils and love to climb!'},
+    {emoji:'\u{1F98C}',label:'Deer',fact:'Male deer grow antlers every year!'},
+    {emoji:'\u{1F43C}',label:'Panda',fact:'Pandas eat bamboo all day long!'},
+    {emoji:'\u{1F981}',label:'Lion',fact:'Lions are called the king of the jungle!'},
+    {emoji:'\u{1F42F}',label:'Tiger',fact:'Tigers have stripes, unique like fingerprints!'},
+    {emoji:'\u{1F98D}',label:'Monkey',fact:'Monkeys love bananas and swing from trees!'},
+    {emoji:'\u{1F43B}',label:'Bear',fact:'Bears sleep all winter - that is hibernation!'},
+    {emoji:'\u{1F98A}',label:'Fox',fact:'Foxes are clever and have bushy tails!'},
+    {emoji:'\u{1F430}',label:'Rabbit',fact:'Rabbits hop and love to eat carrots!'},
+    {emoji:'\u{1F411}',label:'Sheep',fact:'Sheep say baa and give us wool!'},
+    {emoji:'\u{1F426}',label:'Bird',fact:'Birds have feathers and most can fly!'},
+    {emoji:'\u{1F414}',label:'Chicken',fact:'Baby chickens are called chicks!'},
+    {emoji:'\u{1F989}',label:'Owl',fact:'Owls sleep during day and hunt at night!'},
+    {emoji:'\u{1F427}',label:'Penguin',fact:'Penguins are birds that cannot fly but swim!'},
+    {emoji:'\u{1F985}',label:'Eagle',fact:'Eagles have excellent eyesight and fly very high!'},
+    {emoji:'\u{1F40D}',label:'Snake',fact:'Snakes taste the air with their tongues!'}
   ]},
   {id:'colors',name:'Colors',icon:'\u{1F7E5}',color:'#A06CD5',
    cards:[
@@ -476,47 +457,47 @@ const CATEGORIES = [
   ]},
   {id:'fruits',name:'Fruits',icon:'\u{1F34E}',color:'#FF8A5C',
    cards:[
-    {img:IMG+'/apple',label:'Apple',fact:'Apples float in water - 25% air!'},
-    {img:IMG+'/banana',label:'Banana',fact:'Bananas are berries, grow upside down!'},
-    {img:IMG+'/orange',label:'Orange',fact:'Oranges have more vitamin C than lemons!'},
-    {img:IMG+'/lemon',label:'Lemon',fact:'Lemons are sour with lots of vitamin C!'},
-    {img:IMG+'/watermelon',label:'Watermelon',fact:'Watermelon is 92% water!'},
-    {img:IMG+'/grapes',label:'Grapes',fact:'Grapes can be green, red, or purple!'},
-    {img:IMG+'/strawberry',label:'Strawberry',fact:'Only fruit with seeds on the outside!'},
-    {img:IMG+'/cherry',label:'Cherry',fact:'Cherries grow in pairs on the tree!'},
-    {img:IMG+'/peach',label:'Peach',fact:'Peaches have fuzzy skin and a large pit!'},
-    {img:IMG+'/pineapple',label:'Pineapple',fact:'Pineapples take almost 2 years to grow!'},
-    {img:IMG+'/mango',label:'Mango',fact:'Mango is known as the king of fruits!'},
-    {img:IMG+'/kiwi',label:'Kiwi',fact:'Kiwi has green flesh with tiny black seeds!'},
-    {img:IMG+'/tomato',label:'Tomato',fact:'Tomatoes are actually a fruit, not veggie!'},
-    {img:IMG+'/melon',label:'Melon',fact:'Melons are large sweet fruits on vines!'}
+    {emoji:'\u{1F34E}',label:'Apple',fact:'Apples float in water - 25% air!'},
+    {emoji:'\u{1F34C}',label:'Banana',fact:'Bananas are berries, grow upside down!'},
+    {emoji:'\u{1F34A}',label:'Orange',fact:'Oranges have more vitamin C than lemons!'},
+    {emoji:'\u{1F34B}',label:'Lemon',fact:'Lemons are sour with lots of vitamin C!'},
+    {emoji:'\u{1F349}',label:'Watermelon',fact:'Watermelon is 92% water!'},
+    {emoji:'\u{1F347}',label:'Grapes',fact:'Grapes can be green, red, or purple!'},
+    {emoji:'\u{1F353}',label:'Strawberry',fact:'Only fruit with seeds on the outside!'},
+    {emoji:'\u{1F352}',label:'Cherry',fact:'Cherries grow in pairs on the tree!'},
+    {emoji:'\u{1F351}',label:'Peach',fact:'Peaches have fuzzy skin and a large pit!'},
+    {emoji:'\u{1F34D}',label:'Pineapple',fact:'Pineapples take almost 2 years to grow!'},
+    {emoji:'\u{1F950}',label:'Mango',fact:'Mango is known as the king of fruits!'},
+    {emoji:'\u{1F34F}',label:'Kiwi',fact:'Kiwi has green flesh with tiny black seeds!'},
+    {emoji:'\u{1F345}',label:'Tomato',fact:'Tomatoes are actually a fruit, not veggie!'},
+    {emoji:'\u{1F348}',label:'Melon',fact:'Melons are large sweet fruits on vines!'}
   ]},
   {id:'vehicles',name:'Vehicles',icon:'\u{1F697}',color:'#2ECC71',
    cards:[
-    {img:IMG+'/car',label:'Car',fact:'Cars have 4 wheels and carry people!'},
-    {img:IMG+'/bus',label:'Bus',fact:'Buses carry many people at once!'},
-    {img:IMG+'/train',label:'Train',fact:'Trains run on tracks and can be very long!'},
-    {img:IMG+'/rocket',label:'Rocket',fact:'Rockets fly to space at amazing speeds!'},
-    {img:IMG+'/airplane',label:'Airplane',fact:'Airplanes fly in the sky carrying passengers!'},
-    {img:IMG+'/ambulance',label:'Ambulance',fact:'Ambulances help sick people get hospital fast!'},
-    {img:IMG+'/ship',label:'Ship',fact:'Ships sail across oceans and seas!'},
-    {img:IMG+'/bicycle',label:'Bicycle',fact:'Bicycles have 2 wheels, you pedal to move!'},
-    {img:IMG+'/scooter',label:'Scooter',fact:'Scooters are easy to ride and very fun!'},
-    {img:IMG+'/helicopter',label:'Helicopter',fact:'Helicopters can hover in one spot!'},
-    {img:IMG+'/race+car',label:'Race Car',fact:'Race cars go super fast on the track!'}
+    {emoji:'\u{1F697}',label:'Car',fact:'Cars have 4 wheels and carry people!'},
+    {emoji:'\u{1F68C}',label:'Bus',fact:'Buses carry many people at once!'},
+    {emoji:'\u{1F682}',label:'Train',fact:'Trains run on tracks and can be very long!'},
+    {emoji:'\u{1F680}',label:'Rocket',fact:'Rockets fly to space at amazing speeds!'},
+    {emoji:'\u{2708}\u{FE0F}',label:'Airplane',fact:'Airplanes fly in the sky carrying passengers!'},
+    {emoji:'\u{1F691}',label:'Ambulance',fact:'Ambulances help sick people get hospital fast!'},
+    {emoji:'\u{1F6A2}',label:'Ship',fact:'Ships sail across oceans and seas!'},
+    {emoji:'\u{1F6B2}',label:'Bicycle',fact:'Bicycles have 2 wheels, you pedal to move!'},
+    {emoji:'\u{1F6F5}',label:'Scooter',fact:'Scooters are easy to ride and very fun!'},
+    {emoji:'\u{1F681}',label:'Helicopter',fact:'Helicopters can hover in one spot!'},
+    {emoji:'\u{1F3CE}\u{FE0F}',label:'Race Car',fact:'Race cars go super fast on the track!'}
   ]},
   {id:'ocean',name:'Ocean Life',icon:'\u{1F41F}',color:'#3498DB',
    cards:[
-    {img:IMG+'/fish',label:'Fish',fact:'Fish live in water, breathe with gills!'},
-    {img:IMG+'/whale',label:'Whale',fact:'Blue whales are the biggest animals on Earth!'},
-    {img:IMG+'/dolphin',label:'Dolphin',fact:'Dolphins are very smart and talk with clicks!'},
-    {img:IMG+'/shark',label:'Shark',fact:'Sharks existed before dinosaurs!'},
-    {img:IMG+'/octopus',label:'Octopus',fact:'Octopuses have 8 arms and 3 hearts!'},
-    {img:IMG+'/turtle',label:'Sea Turtle',fact:'Sea turtles can live over 100 years!'},
-    {img:IMG+'/crab',label:'Crab',fact:'Crabs walk sideways and have 10 legs!'},
-    {img:IMG+'/jellyfish',label:'Jellyfish',fact:'Jellyfish have no brain, heart, or blood!'},
-    {img:IMG+'/seahorse',label:'Seahorse',fact:'Male seahorses carry babies in their pouch!'},
-    {img:IMG+'/starfish',label:'Starfish',fact:'Starfish can regrow lost arms!'}
+    {emoji:'\u{1F420}',label:'Fish',fact:'Fish live in water, breathe with gills!'},
+    {emoji:'\u{1F40B}',label:'Whale',fact:'Blue whales are the biggest animals on Earth!'},
+    {emoji:'\u{1F42C}',label:'Dolphin',fact:'Dolphins are very smart and talk with clicks!'},
+    {emoji:'\u{1F988}',label:'Shark',fact:'Sharks existed before dinosaurs!'},
+    {emoji:'\u{1F419}',label:'Octopus',fact:'Octopuses have 8 arms and 3 hearts!'},
+    {emoji:'\u{1F422}',label:'Turtle',fact:'Sea turtles can live over 100 years!'},
+    {emoji:'\u{1F980}',label:'Crab',fact:'Crabs walk sideways and have 10 legs!'},
+    {emoji:'\u{1F41F}\u{200D}\u{2642}\u{FE0F}',label:'Jellyfish',fact:'Jellyfish have no brain, heart, or blood!'},
+    {emoji:'\u{1F9DC}',label:'Seahorse',fact:'Male seahorses carry babies in their pouch!'},
+    {emoji:'\u{2B50}',label:'Starfish',fact:'Starfish can regrow lost arms!'}
   ]},
   {id:'weather',name:'Weather',icon:'\u{2600}\u{FE0F}',color:'#FFE66D',
    cards:[
@@ -546,26 +527,26 @@ const CATEGORIES = [
   ]},
   {id:'space',name:'Space',icon:'\u{1F30C}',color:'#A06CD5',
    cards:[
-    {img:IMG+'/sun',label:'Sun',fact:'The sun is a star - the closest to Earth!'},
-    {img:IMG+'/moon',label:'Moon',fact:'The moon orbits Earth every 27 days!'},
+    {emoji:'\u{1F31E}',label:'Sun',fact:'The sun is a star - the closest to Earth!'},
+    {emoji:'\u{1F318}',label:'Moon',fact:'The moon orbits Earth every 27 days!'},
     {emoji:'\u{2B50}',label:'Star',fact:'Stars are giant balls of burning gas!'},
-    {img:IMG+'/earth',label:'Earth',fact:'Earth is called the Blue Planet!'},
-    {img:IMG+'/comet',label:'Comet',fact:'Comets are icy space rocks with long tails!'},
+    {emoji:'\u{1F30E}',label:'Earth',fact:'Earth is called the Blue Planet!'},
+    {emoji:'\u{2604}\u{FE0F}',label:'Comet',fact:'Comets are icy space rocks with long tails!'},
     {emoji:'\u{1F30C}',label:'Milky Way',fact:'Our galaxy has 100 billion+ stars!'},
-    {img:IMG+'/robot',label:'Robot',fact:'Robots explore Mars for us!'},
-    {img:IMG+'/rocket,space',label:'Rocket',fact:'First moon rocket was in 1969!'}
+    {emoji:'\u{1F916}',label:'Robot',fact:'Robots explore Mars for us!'},
+    {emoji:'\u{1F680}',label:'Rocket',fact:'First moon rocket was in 1969!'}
   ]},
   {id:'food',name:'Food',icon:'\u{1F372}',color:'#FF8A5C',
    cards:[
-    {img:IMG+'/bread',label:'Bread',fact:'Bread has been made for 30,000+ years!'},
-    {img:IMG+'/cheese',label:'Cheese',fact:'There are over 2,000 kinds of cheese!'},
-    {img:IMG+'/egg',label:'Egg',fact:'Eggs can be white, brown, blue, or green!'},
-    {img:IMG+'/chocolate',label:'Chocolate',fact:'Chocolate comes from the cacao tree!'},
-    {img:IMG+'/ice+cream',label:'Ice Cream',fact:'12 lbs milk for 1 gallon ice cream!'},
-    {img:IMG+'/cake',label:'Cake',fact:'First birthday cakes were like bread!'},
-    {img:IMG+'/french+fries',label:'Fries',fact:'French fries were invented in Belgium!'},
-    {img:IMG+'/hamburger',label:'Burger',fact:'World biggest burger was 2,014 pounds!'},
-    {img:IMG+'/pizza',label:'Pizza',fact:'First pizza was made in Naples, Italy!'}
+    {emoji:'\u{1F35E}',label:'Bread',fact:'Bread has been made for 30,000+ years!'},
+    {emoji:'\u{1F9C0}',label:'Cheese',fact:'There are over 2,000 kinds of cheese!'},
+    {emoji:'\u{1F95A}',label:'Egg',fact:'Eggs can be white, brown, blue, or green!'},
+    {emoji:'\u{1F36B}',label:'Chocolate',fact:'Chocolate comes from the cacao tree!'},
+    {emoji:'\u{1F368}',label:'Ice Cream',fact:'12 lbs milk for 1 gallon ice cream!'},
+    {emoji:'\u{1F382}',label:'Cake',fact:'First birthday cakes were like bread!'},
+    {emoji:'\u{1F35F}',label:'Fries',fact:'French fries were invented in Belgium!'},
+    {emoji:'\u{1F354}',label:'Burger',fact:'World biggest burger was 2,014 pounds!'},
+    {emoji:'\u{1F355}',label:'Pizza',fact:'First pizza was made in Naples, Italy!'}
   ]}
 ];
 
@@ -839,30 +820,7 @@ function renderCard() {
 
   document.getElementById('cardProgress').textContent = `${idx + 1}/${total}`;
 
-  // Set up image or emoji
-  const placeholder = document.getElementById('cardFrontPlaceholder');
-  const img = document.getElementById('cardFrontImg');
-  const backImg = document.getElementById('cardBackImg');
-  const backEmoji = document.getElementById('cardBackEmoji');
-
-  if (card.img) {
-    placeholder.textContent = card.emoji || '\u{1F4F7}';
-    placeholder.classList.remove('hidden');
-    img.src = card.img;
-    img.style.display = 'none';
-    backImg.src = card.img;
-    backImg.style.display = 'none';
-    backImg.style.display = 'none';
-    backEmoji.style.display = 'none';
-  } else {
-    placeholder.textContent = card.emoji;
-    placeholder.classList.remove('hidden');
-    img.style.display = 'none';
-    backImg.style.display = 'none';
-    backEmoji.textContent = card.emoji;
-    backEmoji.style.display = '';
-  }
-
+  document.getElementById('cardFrontEmoji').textContent = card.emoji || '\u{1F4CD}';
   document.getElementById('cardBackEmoji').textContent = card.emoji || '';
   document.getElementById('cardLabel').textContent = card.label;
   document.getElementById('cardFact').textContent = card.fact || '';
